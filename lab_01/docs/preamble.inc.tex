@@ -4,7 +4,10 @@
 \usepackage[english,russian]{babel} % Языки: русский, английский
 \usepackage{pscyr} % Нормальные шрифты
 \usepackage{enumitem}
-\usepackage[figurename=Рисунок]{caption}
+\usepackage{caption}
+
+\captionsetup{labelsep=endash}
+\captionsetup[figure]{name=Рисунок}
 
 \usepackage{amsmath}
 
@@ -49,7 +52,7 @@
 	numbersep=5pt,
 	frame=single,
 	tabsize=4,
-	captionpos=b,
+	captionpos=t,
 	breaklines=true
 }
 
