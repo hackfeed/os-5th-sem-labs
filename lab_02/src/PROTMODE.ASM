@@ -85,30 +85,24 @@ TEXT	SEGMENT 'CODE' USE16
 
         CLI
 
-        ; Переход в защищенный режим.
         MOV EAX, CR0
         OR  EAX, 1
         MOV CR0, EAX
 
-        ; Команда дальнего перехода для смены CS:IP.
         DB  0EAH
         DW  OFFSET CONTINUE
         DW  16
 
     CONTINUE:
-        ; Занесение в DS селектора сегмента данных.
         MOV AX, 8
         MOV DS, AX
 
-        ; Занесение в SS селектора сегмента стека.
         MOV AX, 24
         MOV SS, AX
 
-        ; Занесение в ES селектора сегмента видеопамяти.
         MOV AX, 32
         MOV ES, AX
 
-        ; Занесение в GS селектора сегмента размера 4ГБ.
         MOV AX, 40
         MOV GS, AX
 
