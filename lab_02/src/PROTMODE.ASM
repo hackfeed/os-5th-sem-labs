@@ -28,9 +28,9 @@ DATA	SEGMENT USE16
     MSGPM  DB  '!PROTECTED MODE!'
     MSGPM_LEN=$-MSGPM
 
-    PARAM=1EH
-    COL=12
-    ROW=11
+    PARAM=1CH
+    COL=30
+    ROW=12
 
     DATA_SIZE=$-GDT_NULL
 DATA    ENDS
@@ -124,17 +124,17 @@ TEXT	SEGMENT 'CODE' USE16
         LOOP    PRINTPM
 
 
-        ;MOV GDT_DATA.LIMIT, 0FFFFH
-        ;MOV GDT_CODE.LIMIT, 0FFFFH
-        ;MOV GDT_STACK.LIMIT, 0FFFFH
-        ;MOV GDT_SCREEN.LIMIT, 0FFFFH
+        MOV GDT_DATA.LIMIT, 0FFFFH
+        MOV GDT_CODE.LIMIT, 0FFFFH
+        MOV GDT_STACK.LIMIT, 0FFFFH
+        MOV GDT_SCREEN.LIMIT, 0FFFFH
 
-        ;PUSH DS
-        ;POP  DS
-        ;PUSH ES
-        ;POP  ES
-        ;PUSH SS
-        ;POP  SS
+        PUSH DS
+        POP  DS
+        PUSH ES
+        POP  ES
+        PUSH SS
+        POP  SS
 
         DB  0EAH
         DW  OFFSET GO
