@@ -15,21 +15,11 @@ int child_pids[N];
 const char *PIPEMSG[N] = {"message1", "message2"};
 int state = 0;
 
-void reverse(char *x, int begin, int end)
+void ignore_sigint(int sig)
 {
-    char c;
-
-    if (begin >= end)
-        return;
-
-    c = *(x + begin);
-    *(x + begin) = *(x + end);
-    *(x + end) = c;
-
-    reverse(x, ++begin, --end);
 }
 
-void reverse_buf(int sig)
+void is_writing(int sig)
 {
     state = 1;
 }
@@ -48,7 +38,7 @@ int main()
         return 1;
     }
 
-    signal(SIGINT, reverse_buf);
+    signal(SIGINT, ignore_sigint);
 
     for (size_t i = 0; i < N; ++i)
     {
@@ -59,9 +49,18 @@ int main()
 
             exit(1);
         case 0:
-            close(fd[0]);
-            write(fd[1], PIPEMSG[i], strlen(PIPEMSG[i]));
-            printf("Message has been sent to parent\n");
+            signal(SIGINT, is_writing);
+            sleep(INTERVAL);
+            if (state)
+            {
+                close(fd[0]);
+                write(fd[1], PIPEMSG[i], strlen(PIPEMSG[i]));
+                printf("Message has been sent to parent\n");
+            }
+            else
+            {
+                printf("No signal sent, writing will not be completed\n");
+            }
 
             exit(0);
         default:
@@ -88,12 +87,6 @@ int main()
 
     close(fd[1]);
     read(fd[0], buffer, BUFLEN);
-    sleep(INTERVAL);
-
-    if (state)
-    {
-        reverse(buffer, 0, strlen(buffer) - 1);
-    }
 
     printf("Received message: %s\n", buffer);
 
