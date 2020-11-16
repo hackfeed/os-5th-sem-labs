@@ -8,12 +8,16 @@
 #define N 2
 #define BUFLEN 100
 
+int pid;
+int child_pids[N];
 const char *PIPEMSG[N] = {"message1", "message2"};
 
 int main()
 {
     int fd[2];
     char buffer[BUFLEN] = {0};
+
+    printf("Parent process: PID=%d, GROUP=%d\n", getpid(), getpgrp());
 
     if (pipe(fd) == -1)
     {
@@ -24,7 +28,7 @@ int main()
 
     for (size_t i = 0; i < N; ++i)
     {
-        switch (fork())
+        switch (pid = fork())
         {
         case -1:
             perror("Can't fork\n");
@@ -36,6 +40,8 @@ int main()
             printf("Message has been sent to parent\n");
 
             exit(0);
+        default:
+            child_pids[i] = pid;
         }
     }
 
@@ -60,6 +66,7 @@ int main()
     read(fd[0], buffer, BUFLEN);
     printf("Received message: %s\n", buffer);
 
+    printf("Parent process have children with IDs: %d, %d\n", child_pids[0], child_pids[1]);
     printf("Parent process is dead now\n");
 
     return 0;

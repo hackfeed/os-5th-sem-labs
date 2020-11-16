@@ -4,7 +4,10 @@
 #include <sys/types.h>
 
 #define N 2
-#define INTERVAL 5
+#define INTERVAL 2
+
+int pid;
+int child_pids[N];
 
 int main()
 {
@@ -12,7 +15,7 @@ int main()
 
     for (size_t i = 0; i < N; ++i)
     {
-        switch (fork())
+        switch (pid = fork())
         {
         case -1:
             perror("Can't fork\n");
@@ -23,6 +26,8 @@ int main()
             sleep(INTERVAL);
 
             return 0;
+        default:
+            child_pids[i] = pid;
         }
     }
 
@@ -43,6 +48,7 @@ int main()
         }
     }
 
+    printf("Parent process have children with IDs: %d, %d\n", child_pids[0], child_pids[1]);
     printf("Parent process is dead now\n");
 
     return 0;
