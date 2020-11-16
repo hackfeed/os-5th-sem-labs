@@ -2,7 +2,7 @@
 #include <unistd.h>
 
 #define N 2
-#define INTERVAL 30
+#define INTERVAL 2
 
 int pid;
 int child_pids[N];
@@ -20,8 +20,8 @@ int main()
 
             return 1;
         case 0:
-            printf("Child process : PID=%d, GROUP=%d, PPID=%d\n", getpid(), getpgrp(), getppid());
             sleep(INTERVAL);
+            printf("Child process : PID=%d, GROUP=%d, PPID=%d\n", getpid(), getpgrp(), getppid());
 
             return 0;
         default:
